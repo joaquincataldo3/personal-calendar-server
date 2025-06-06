@@ -2,25 +2,20 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares/authenticateToken';
 import { PrismaClient } from '../generated/prisma';
 import { isFutureDate } from '../utils/utils';
+import { sendBadRequest, sendNotFound, sendOk, sendServerError, sendUnauthorized } from '../utils/sendResponses';
 const prisma = new PrismaClient();
 
 export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { title, description, eventDate } = req.body;
     if (!title || !eventDate) {
-      res.status(400).json({
-        statusCode: 400,
-        message: 'title and event date are required',
-      });
+      sendBadRequest(res, 'title and event date are required');
       return;
     }
 
     // check to avoid past dates
     if(!isFutureDate(eventDate)){
-      res.status(400).json({
-        statusCode: 400,
-        message: 'event date must be a valid date starting from tomorrow',
-      });
+      sendBadRequest(res, 'event date must be a valid date starting from tomorrow')
       return;
     }
 
@@ -34,19 +29,12 @@ export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
       },
     });
 
-    res.status(201).json({
-      statusCode: 201,
-      message: 'successfully created event',
-      data: event,
-    });
+    sendOk(res, 'successfully created event', event);
     return;
   } catch (error) {
     console.log('error creating event:');
-    console.log(error)
-    res.status(500).json({
-      statusCode: 500,
-      message: 'internal server error',
-    });
+    console.log(error);
+    sendServerError(res);
     return;
   }
 };
@@ -60,19 +48,12 @@ export const getUserEvents = async (req: AuthenticatedRequest, res: Response) =>
             orderBy: { event_date: 'asc' },
         });
 
-        res.status(200).json({
-            statusCode: 200,
-            message: 'successfully retrieved events',
-            data: events,
-        });
+        sendOk(res, 'successfully retrieved events', events);
         return;
     } catch (error) {
         console.log('error getting user events');
-        console.log(error)
-        res.status(500).json({
-            statusCode: 500,
-            message: 'internal server error'
-        })
+        console.log(error);
+        sendServerError(res);
         return;
     }
 }
@@ -85,27 +66,18 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         const { title, description, eventDate } = req.body;
 
         if (isNaN(eventId)) {
-            res.status(400).json({
-                statusCode: 400,
-                message: 'invalid event id',
-            });
+            sendBadRequest(res, 'invalid event id');
             return;
         }
 
         if (!title || !eventDate) {
-            res.status(400).json({
-                statusCode: 400,
-                message: 'title and event date are required',
-            });
+            sendBadRequest(res, 'title and event date are required');
             return;
         }
 
         // check to avoid past dates
         if(!isFutureDate(eventDate)){
-            res.status(400).json({
-                statusCode: 400,
-                message: 'event date must be a valid date starting from tomorrow',
-            });
+            sendBadRequest(res, 'event date must be a valid date starting from tomorrow');
             return;
         }
 
@@ -113,17 +85,11 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
             where: { id: Number(eventId) },
         });
         if (!event) {
-            res.status(404).json({
-                statusCode: 404,
-                message: 'event not found',
-            });
+            sendNotFound(res, 'event not found');
             return;
         }
         if(event.user_id !== userId) {
-            res.status(401).json({
-                statusCode: 404,
-                message: 'unauthorized to edit event',
-            });
+            sendUnauthorized(res, 'unauthorized to edit event')
             return;
         }
 
@@ -136,18 +102,12 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
             },
         });
 
-        res.status(200).json({
-            statusCode: 200,
-            message: 'event updated successfully'
-        });
+        sendOk(res, 'event updated successfully')
         return;
     } catch (error) {
         console.log('error editing event');
         console.log(error);
-        res.status(500).json({
-            message: 'internal server error',
-            statusCode: 500
-        })
+        sendServerError(res);
         return;
     }
 }
@@ -159,10 +119,7 @@ export const deleteEvent = async (req: AuthenticatedRequest, res: Response) => {
         const eventId = Number(eventIdStr); 
 
         if (isNaN(eventId)) {
-            res.status(400).json({
-                statusCode: 400,
-                message: 'invalid event id',
-            });
+            sendBadRequest(res, 'invalid event id');
             return;
         }
 
@@ -170,17 +127,11 @@ export const deleteEvent = async (req: AuthenticatedRequest, res: Response) => {
             where: { id: eventId },
         });
         if (!event) {
-            res.status(404).json({
-                statusCode: 404,
-                message: 'event not found',
-            });
+            sendNotFound(res, 'event not found');
             return;
         }
         if(event.user_id !== userId){
-            res.status(401).json({
-                statusCode: 401,
-                message: 'unauthorized to delete event',
-            });
+            sendUnauthorized(res, 'unauthorized to delete event');
             return;
         }
 
@@ -188,20 +139,13 @@ export const deleteEvent = async (req: AuthenticatedRequest, res: Response) => {
             where: { id: eventId },
         });
 
-        res.status(200).json({
-            statusCode: 200,
-            message: 'event deleted successfully',
-            data: eventId
-        });
+        sendOk(res, 'event successfully deleted');
         return;
 
     } catch (error) {
         console.log('error deleting event');
         console.log(error);
-        res.status(500).json({
-            statusCode: 500,
-            message: 'internal server error'
-        })
+        sendServerError(res);
         return;
     }
  
