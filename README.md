@@ -6,7 +6,6 @@ backend is built with Node.js, Express, TypeScript, Prisma ORM and PostgreSQL.
 ### 1 - clone the repository
 ```bash
 git clone https://github.com/your-username/calendar-app.git
-```bash
 cd calendar-app/server
 ```
 
@@ -36,7 +35,7 @@ npx prisma migrate dev --name init
 
 ### GET /logout
 * logs the user out
-* success response
+* success response:
 ```json
 {
   "statusCode": 200,
@@ -46,7 +45,7 @@ npx prisma migrate dev --name init
   
 ### POST /register
 * registers a new user
-* request body
+* request body:
 ```json
 {
   "email": "example@email.com",
@@ -54,7 +53,7 @@ npx prisma migrate dev --name init
 }
 ```
 
-* success response
+* success response:
 ```json
 {
   "statusCode": 201,
