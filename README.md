@@ -8,10 +8,12 @@ backend is built with Node.js, Express, TypeScript, Prisma ORM and PostgreSQL.
 git clone https://github.com/your-username/calendar-app.git
 ```bash
 cd calendar-app/server
+```
 
 ### 2 - install dependencies
 ```bash
 npm install
+```
 
 ### 3 - create .env file, adding following variables:
 DB_HOST=localhost
@@ -27,6 +29,7 @@ JWT_SECRET="secret-ponce"
 * make sure postgresql is running locall. then run:
 ```bash
 npx prisma migrate dev --name init
+```
 
 ## auth endpoints
 * all auth endpoints are prefixed with 'api/auth'
@@ -39,6 +42,7 @@ npx prisma migrate dev --name init
   "statusCode": 200,
   "message": "successfully logged out"
 }
+```
   
 ### POST /register
 * registers a new user
@@ -48,13 +52,15 @@ npx prisma migrate dev --name init
   "email": "example@email.com",
   "password": "Password@123"
 }
+```
+
 * success response
 ```json
 {
   "statusCode": 201,
   "message": "successfully created user"
 }
-
+```
 ### POST /sign-in
 * signs the user in
 * request body
@@ -69,3 +75,4 @@ npx prisma migrate dev --name init
   "statusCode": 200,
   "message": "successfully logged in"
 }
+```
