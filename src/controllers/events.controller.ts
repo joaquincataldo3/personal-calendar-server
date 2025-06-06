@@ -115,7 +115,7 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         if (!event) {
             res.status(404).json({
                 statusCode: 404,
-                message: 'event not found or unauthorized to edit',
+                message: 'event not found',
             });
             return;
         }
@@ -150,4 +150,59 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         })
         return;
     }
+}
+
+export const deleteEvent = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+        const eventIdStr = req.params.eventId; 
+        const eventId = Number(eventIdStr); 
+
+        if (isNaN(eventId)) {
+            res.status(400).json({
+                statusCode: 400,
+                message: 'invalid event id',
+            });
+            return;
+        }
+
+        const event = await prisma.event.findUnique({
+            where: { id: eventId },
+        });
+        if (!event) {
+            res.status(404).json({
+                statusCode: 404,
+                message: 'event not found',
+            });
+            return;
+        }
+        if(event.user_id !== userId){
+            res.status(401).json({
+                statusCode: 401,
+                message: 'unauthorized to delete event',
+            });
+            return;
+        }
+
+        await prisma.event.delete({
+            where: { id: eventId },
+        });
+
+        res.status(200).json({
+            statusCode: 200,
+            message: 'event deleted successfully',
+            data: eventId
+        });
+        return;
+
+    } catch (error) {
+        console.log('error deleting event');
+        console.log(error);
+        res.status(500).json({
+            statusCode: 500,
+            message: 'internal server error'
+        })
+        return;
+    }
+ 
 }
