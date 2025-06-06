@@ -80,15 +80,24 @@ export const getUserEvents = async (req: AuthenticatedRequest, res: Response) =>
 export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const userId = req.user?.userId;
-        const { eventId } = req.params;
+        const eventIdStr = req.params.eventId; 
+        const eventId = Number(eventIdStr);
         const { title, description, eventDate } = req.body;
+
+        if (isNaN(eventId)) {
+            res.status(400).json({
+                statusCode: 400,
+                message: 'invalid event id',
+            });
+            return;
+        }
 
         if (!title || !eventDate) {
             res.status(400).json({
                 statusCode: 400,
                 message: 'title and event date are required',
             });
-            return
+            return;
         }
 
         // check to avoid past dates
