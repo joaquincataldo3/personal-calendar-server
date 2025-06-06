@@ -143,3 +143,26 @@ export const signIn = async (req: Request, res: Response) => {
         return;
     }
 }   
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+    });
+
+    res.status(200).json({
+      statusCode: 200,
+      message: 'successfully logged out',
+    });
+    return;
+  } catch (error) {
+    console.error('error logging out', error);
+    res.status(500).json({
+      statusCode: 500,
+      message: 'Internal server error',
+    });
+    return;
+  }
+};
