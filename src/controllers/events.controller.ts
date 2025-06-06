@@ -76,3 +76,69 @@ export const getUserEvents = async (req: AuthenticatedRequest, res: Response) =>
         return;
     }
 }
+
+export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+        const { eventId } = req.params;
+        const { title, description, eventDate } = req.body;
+
+        if (!title || !eventDate) {
+            res.status(400).json({
+                statusCode: 400,
+                message: 'title and event date are required',
+            });
+            return
+        }
+
+        // check to avoid past dates
+        if(!isFutureDate(eventDate)){
+            res.status(400).json({
+                statusCode: 400,
+                message: 'event date must be a valid date starting from tomorrow',
+            });
+            return;
+        }
+
+        const event = await prisma.event.findUnique({
+            where: { id: Number(eventId) },
+        });
+        if (!event) {
+            res.status(404).json({
+                statusCode: 404,
+                message: 'event not found or unauthorized to edit',
+            });
+            return;
+        }
+        if(event.user_id !== userId) {
+            res.status(401).json({
+                statusCode: 404,
+                message: 'unauthorized to edit event',
+            });
+            return;
+        }
+
+        await prisma.event.update({
+            where: { id: Number(eventId) },
+            data: {
+                title,
+                description,
+                event_date: new Date(eventDate),
+            },
+        });
+
+        res.status(200).json({
+            statusCode: 200,
+            message: 'event updated successfully'
+        });
+        return;
+    } catch (error) {
+        console.log('error editing event');
+        console.log(error);
+        res.status(500).json({
+            message: 'internal server error',
+            statusCode: 500
+        })
+        return;
+    }
+}
