@@ -1,11 +1,22 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { db } from './db/database';
+import authRouter from './routes/auth.routes';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors({
+  origin: process.env.ORIGIN,
+  credentials: true, 
+}));
+app.use(cookieParser());
+app.use(express.json());
+app.use('/api/auth', authRouter);
 
 db.connect()
   .then(() => {
