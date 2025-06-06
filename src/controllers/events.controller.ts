@@ -50,3 +50,29 @@ export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
     return;
   }
 };
+
+export const getUserEvents = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userId = req.user?.userId;
+
+        const events = await prisma.event.findMany({
+            where: { user_id: userId },
+            orderBy: { event_date: 'asc' },
+        });
+
+        res.status(200).json({
+            statusCode: 200,
+            message: 'successfully retrieved events',
+            data: events,
+        });
+        return;
+    } catch (error) {
+        console.log('error getting user events');
+        console.log(error)
+        res.status(500).json({
+            statusCode: 500,
+            message: 'internal server error'
+        })
+        return;
+    }
+}
