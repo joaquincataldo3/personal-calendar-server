@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '../generated/prisma';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 // test email
@@ -64,7 +65,7 @@ export const registerUser = async (req: Request, res: Response) => {
         })
         return;
     } catch (error) {
-        console.log('error while registering user');
+        console.log('error in register');
         console.log(error);
         res.status(500).json({
             statusCode: 500,
@@ -73,3 +74,63 @@ export const registerUser = async (req: Request, res: Response) => {
         return;
     }
 }
+
+export const signIn = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            res.status(500).json({
+                statusCode: 500,
+                message: 'email and password are required'
+            });
+            return;
+        }
+
+        const sanitizedEmail = email.toLowerCase();
+        const userExists = await prisma.user.findUnique({
+            where: { email: sanitizedEmail },
+        });
+        if(!userExists){
+            res.status(401).json({
+                statusCode: 401,
+                message: 'invalid credentials'
+            })
+            return
+        }
+
+        const user = userExists;
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            res.status(401).json({
+                statusCode: 401,
+                message: 'invalid credentials'
+            })
+            return
+        }
+
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            process.env.JWT_SECRET!,
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).json({
+            statusCode: 201,
+            message: 'succesfully logged in',
+            data: {
+                token
+            }
+        })
+        return;
+
+
+    } catch (error) {
+        console.log('error in sign in');
+        console.log(error);
+        res.status(500).json({
+            statusCode: 500,
+            message: 'internal server error'
+        });
+        return;
+    }
+}   
