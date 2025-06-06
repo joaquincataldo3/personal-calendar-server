@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '../generated/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { sendBadRequest, sendCreated, sendOk, sendServerError } from '../utils/sendResponses';
 
 const prisma = new PrismaClient();
 // test email
@@ -13,28 +14,19 @@ export const registerUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(400).json({
-            statusCode: 400,
-            message: 'email and password are required',
-            });
+            sendBadRequest(res, 'email and password are required');
             return;
         }
 
         const isValidEmail = emailRegex.test(email);
         if(!isValidEmail){
-            res.status(400).json({
-                statusCode: 400,
-                message: 'invalid email'
-            })
+            sendBadRequest(res, 'invalid email');
             return;
         }
 
         const isValidPassword = passwordRegex.test(password);
         if(!isValidPassword){
-            res.status(400).json({
-                statusCode: 400,
-                message: 'password must be at least 8 characters, including one uppercase letter and one special character',
-            });
+            sendBadRequest(res, 'password must be at least 8 characters, including one uppercase letter and one special character');
             return;
         }
 
@@ -59,18 +51,12 @@ export const registerUser = async (req: Request, res: Response) => {
             },
         });
 
-        res.status(201).json({
-            statusCode: 201,
-            message: 'successfully created user'
-        })
+        sendCreated(res, 'successfully created user');
         return;
     } catch (error) {
         console.log('error in register');
         console.log(error);
-        res.status(500).json({
-            statusCode: 500,
-            message: 'internal server error'
-        });
+        sendServerError(res);
         return;
     }
 }
@@ -79,10 +65,7 @@ export const signIn = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(500).json({
-                statusCode: 500,
-                message: 'email and password are required'
-            });
+            sendBadRequest(res, 'email and password are required');
             return;
         }
 
@@ -91,20 +74,14 @@ export const signIn = async (req: Request, res: Response) => {
             where: { email: sanitizedEmail },
         });
         if(!userExists){
-            res.status(401).json({
-                statusCode: 401,
-                message: 'invalid credentials'
-            })
+            sendBadRequest(res, 'invalid credentials');
             return
         }
 
         const user = userExists;
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            res.status(401).json({
-                statusCode: 401,
-                message: 'invalid credentials'
-            })
+            sendBadRequest(res, 'invalid credentials');
             return
         }
 
@@ -123,23 +100,13 @@ export const signIn = async (req: Request, res: Response) => {
             maxAge: 24 * 60 * 60 * 1000 
         });
 
-        res.status(200).json({
-            statusCode: 201,
-            message: 'succesfully logged in',
-            data: {
-                token
-            }
-        })
+        sendOk(res, 'succesfully logged in', token);
         return;
-
 
     } catch (error) {
         console.log('error in sign in');
         console.log(error);
-        res.status(500).json({
-            statusCode: 500,
-            message: 'internal server error'
-        });
+        sendServerError(res);
         return;
     }
 }   
