@@ -108,11 +108,20 @@ export const signIn = async (req: Request, res: Response) => {
             return
         }
 
+        // token expires in 1 hour and cookie in 1 day
+        // for simplicity, refresh tokens are not implemented in this project
+        // production solution should include this
         const token = jwt.sign(
             { userId: user.id, email: user.email },
             process.env.JWT_SECRET!,
-            { expiresIn: '1h' }
+            { expiresIn: '2h' }
         );
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            maxAge: 24 * 60 * 60 * 1000 
+        });
 
         res.status(200).json({
             statusCode: 201,

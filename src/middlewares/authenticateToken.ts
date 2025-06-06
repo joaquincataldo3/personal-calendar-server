@@ -10,24 +10,22 @@ export const authenticateToken = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader?.split(' ')[1]; // format: Bearer <token>
+ 
+  const {token} = req.cookies;
 
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       statusCode: 401,
       message: 'access token required',
     });
-    return;
   }
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
     if (err) {
-      res.status(403).json({
+      return res.status(403).json({
         statusCode: 403,
         message: 'invalid or expired token',
       });
-      return 
     }
 
     req.user = decoded;
