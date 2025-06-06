@@ -68,6 +68,7 @@ npx prisma migrate dev --name init
   "email": "example@email.com",
   "password": "Password@123"
 }
+```
 * success response
 ```json
 {
