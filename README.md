@@ -25,13 +25,17 @@ DATABASE_URL,
 JWT_SECRET,
 * variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/DATABASE"
 
-
 ### 4 - set up database
 * make sure postgresql is running locall. then run:
 ```bash
 npx prisma migrate dev --name init
 ```
 * this will apply the prisma schema, create the migrations and generate the necessary tables in the database.
+
+### 5 - run the app
+```bash
+npm run dev
+```
   
 ## auth endpoints
 * all auth endpoints are prefixed with 'api/auth'
