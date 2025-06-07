@@ -74,5 +74,78 @@ npx prisma migrate dev --name init
 {
   "statusCode": 200,
   "message": "successfully logged in"
+```
+
+## events endpoints
+* all events endpoints are prefixed with 'api/event'
+
+### GET /
+* retrieve all the logged user events
+* success response
+```json
+"statusCode": 200,
+  "message": "successfully retrieved events",
+  "data": [
+    {
+      "id": 1,
+      "title": "meeting",
+      "description": "weekly sync",
+      "event_date": "2025-06-09T10:00:00.000Z",
+      "user_id": 2
+    }
+  ]
+```
+
+### POST /
+* signs the user in
+* request body
+* ---description is optional---
+```json
+{
+  "title": "meeting with team",
+  "description": "discuss sprint progress",
+  "eventDate": "2025-06-09T15:00:00.000Z"
+}
+```
+* success response
+```json
+{
+  "statusCode": 200,
+  "message": "successfully created event",
+  "data": {
+    "id": 23,
+    "title": "meeting with team",
+    "description": "discuss sprint progress",
+    "event_date": "2025-06-09T15:00:00.000Z",
+    "user_id": 2
+  }
+}
+```
+
+### PUT /:eventId
+* edits an event
+* request body
+* ---description is optional---
+```json
+{
+  "title": "updated title",
+  "description": "updated description",
+  "eventDate": "2025-06-11T15:00:00.000Z"
+}
+```
+* success response
+```json
+{
+  "statusCode": 200,
+  "message": "event updated successfully"
+}
+```
+### DELETE /:eventId
+* deletes an event
+* success response
+```json
+{
+  "statusCode": 200,
+  "message": "event successfully deleted"
 }
 ```
