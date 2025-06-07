@@ -5,7 +5,7 @@ backend is built with Node.js, Express, TypeScript, Prisma ORM and PostgreSQL.
 
 ### 1 - clone the repository
 ```bash
-git clone https://github.com/your-username/calendar-app.git
+git clone https://github.com/joaquincataldo3/personal-calendar-server.git
 cd calendar-app/server
 ```
 
