@@ -15,14 +15,16 @@ npm install
 ```
 
 ### 3 - create .env file, adding following variables:
-DB_HOST
-DB_PORT
-DB_NAME
-DB_USER
-DB_PASSWORD
-PORT
-DATABASE_URL="postgresql://<postgress-user>:<postgress-password>@localhost:3030/personal_calendar"
-JWT_SECRET
+DB_HOST,
+DB_PORT,
+DB_NAME,
+DB_USER,
+DB_PASSWORD,
+PORT,
+DATABASE_URL,
+JWT_SECRET,
+* variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/personal_calendar"
+
 
 ### 4 - set up database
 * make sure postgresql is running locall. then run:
