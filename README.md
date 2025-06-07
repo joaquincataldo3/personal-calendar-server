@@ -23,7 +23,7 @@ DB_PASSWORD,
 PORT,
 DATABASE_URL,
 JWT_SECRET,
-* variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/personal_calendar"
+* variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/DATABASE"
 
 
 ### 4 - set up database
