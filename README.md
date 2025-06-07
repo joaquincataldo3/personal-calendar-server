@@ -31,7 +31,8 @@ JWT_SECRET,
 ```bash
 npx prisma migrate dev --name init
 ```
-
+* this will apply the prisma schema, create the migrations and generate the necessary tables in the database.
+  
 ## auth endpoints
 * all auth endpoints are prefixed with 'api/auth'
 
