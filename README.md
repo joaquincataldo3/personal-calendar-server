@@ -23,7 +23,9 @@ DB_PASSWORD,
 PORT,
 DATABASE_URL,
 JWT_SECRET,
+ORIGIN
 * variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/DATABASE"
+* origin variable must be localhost with port number of the frontend (ex: http://localhost:4200)
 
 ### 4 - set up database
 * make sure postgresql is running locall. then run:
