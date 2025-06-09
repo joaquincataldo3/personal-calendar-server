@@ -107,7 +107,7 @@ npm run dev
 ```
 
 ### POST /
-* signs the user in
+* creates an event
 * request body
 * ---description is optional---
 ```json
