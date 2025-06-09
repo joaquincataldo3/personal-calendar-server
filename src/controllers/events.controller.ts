@@ -79,6 +79,7 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         const eventIdStr = req.params.eventId; 
         const eventId = Number(eventIdStr);
         const { title, description, startTime, endTime } = req.body;
+        // asumming we are handling UTC dates
         const start = new Date(startTime);
         const end = new Date(endTime);
 
