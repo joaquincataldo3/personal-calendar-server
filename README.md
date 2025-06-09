@@ -99,7 +99,8 @@ npm run dev
       "id": 1,
       "title": "meeting",
       "description": "weekly sync",
-      "event_date": "2025-06-09T10:00:00.000Z",
+      "start_time": "2025-06-09T10:00:00.000Z",
+      "end_time": "2025-06-09T11:00:00.000Z",
       "user_id": 2
     }
   ]
@@ -113,7 +114,8 @@ npm run dev
 {
   "title": "meeting with team",
   "description": "discuss sprint progress",
-  "eventDate": "2025-06-09T15:00:00.000Z"
+  "startTime": "2025-06-09T15:00:00.000Z",
+  "endTime": "2025-06-09T15:30:00.000Z"
 }
 ```
 * success response
@@ -125,7 +127,8 @@ npm run dev
     "id": 23,
     "title": "meeting with team",
     "description": "discuss sprint progress",
-    "event_date": "2025-06-09T15:00:00.000Z",
+    "startTime": "2025-06-09T15:00:00.000Z",
+    "endTime": "2025-06-09T15:30:00.000Z"
     "user_id": 2
   }
 }
@@ -139,7 +142,8 @@ npm run dev
 {
   "title": "updated title",
   "description": "updated description",
-  "eventDate": "2025-06-11T15:00:00.000Z"
+  "startTime": "2025-08-09T15:00:00.000Z",
+  "endTime": "2025-10-09T15:30:00.000Z"
 }
 ```
 * success response
