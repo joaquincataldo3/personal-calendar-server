@@ -38,7 +38,8 @@ export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
       data: {
         title,
         description,
-        event_date: new Date(eventDate),
+        start_time: start,
+        end_time: end,
         user_id: userId,
       },
     });
@@ -59,7 +60,7 @@ export const getUserEvents = async (req: AuthenticatedRequest, res: Response) =>
 
         const events = await prisma.event.findMany({
             where: { user_id: userId },
-            orderBy: { event_date: 'asc' },
+            orderBy: { start_time: 'asc' },
         });
 
         sendOk(res, 'successfully retrieved events', events);
@@ -77,21 +78,27 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         const userId = req.user?.userId;
         const eventIdStr = req.params.eventId; 
         const eventId = Number(eventIdStr);
-        const { title, description, eventDate } = req.body;
+        const { title, description, startTime, endTime } = req.body;
+        const start = new Date(startTime);
+        const end = new Date(endTime);
 
         if (isNaN(eventId)) {
             sendBadRequest(res, 'invalid event id');
             return;
         }
 
-        if (!title || !eventDate) {
+        if (!title || !startTime || !endTime) {
             sendBadRequest(res, 'title and event date are required');
             return;
         }
 
-        // check to avoid past dates
-        if(!isFutureDate(eventDate)){
-            sendBadRequest(res, 'event date must be a valid date starting from tomorrow');
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            sendBadRequest(res, 'invalid date format');
+            return;
+        }
+
+        if (start >= end) {
+            sendBadRequest(res, 'start time must be before end time');
             return;
         }
 
@@ -112,7 +119,8 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
             data: {
                 title,
                 description,
-                event_date: new Date(eventDate),
+                start_time: start,
+                end_time: end
             },
         });
 
