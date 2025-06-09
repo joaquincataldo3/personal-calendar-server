@@ -7,15 +7,29 @@ const prisma = new PrismaClient();
 
 export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { title, description, eventDate } = req.body;
+    const { title, description, eventDate, startTime, endTime } = req.body;
     if (!title || !eventDate) {
       sendBadRequest(res, 'title and event date are required');
       return;
     }
-
+   
     // check to avoid past dates
     if(!isFutureDate(eventDate)){
-      sendBadRequest(res, 'event date must be a valid date starting from tomorrow')
+        sendBadRequest(res, 'event date must be a valid date starting from tomorrow')
+        return;
+    }
+    
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    // time format validations
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      sendBadRequest(res, 'invalid date format');
+      return;
+    }
+
+    if (start >= end) {
+      sendBadRequest(res, 'start time must be before end time');
       return;
     }
 
