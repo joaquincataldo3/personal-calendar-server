@@ -133,3 +133,7 @@ export const logout = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const userAuthenticated = (req: Request, res: Response) => {
+    sendOk(res, 'authenticated');
+}
