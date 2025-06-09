@@ -59,7 +59,7 @@ export const getUserEvents = async (req: AuthenticatedRequest, res: Response) =>
 
         const events = await prisma.event.findMany({
             where: { user_id: userId },
-            orderBy: { event_date: 'asc' },
+            orderBy: { start_time: 'asc' },
         });
 
         sendOk(res, 'successfully retrieved events', events);
