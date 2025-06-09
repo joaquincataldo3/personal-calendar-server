@@ -14,7 +14,6 @@ export const authenticateToken = (
   const {token} = req.cookies;
 
   if (!token) {
-    console.log('entro')
     res.status(401).json({
       statusCode: 401,
       message: 'access token required',
