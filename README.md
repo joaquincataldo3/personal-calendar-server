@@ -9,6 +9,10 @@ git clone https://github.com/joaquincataldo3/personal-calendar-server.git
 cd personal-calendar-server
 ```
 
+### 2 - prerequisites checklist
+* make sure you have postgresql installed and running
+* make sure you installed nodejs >= 18 (20 or 22 recommended) -download from https://nodejs.org-
+
 ### 2 - install dependencies
 ```bash
 npm install
