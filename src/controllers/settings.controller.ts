@@ -21,15 +21,23 @@ export const updateUserSettings = async (req: AuthenticatedRequest, res: Respons
     try {
         const userId = req.user.userId;
         const { language, timezone, location, dark_mode } = req.body;
-
-        const updated = await prisma.userSettings.update({
+        // if record is there, updates it
+        // if not, it creates one
+        const updated = await prisma.userSettings.upsert({
             where: { user_id: userId },
-            data: { 
-                language, 
-                timezone, 
-                location, 
-                dark_mode
-            }
+                update: {
+                    language,
+                    timezone,
+                    location,
+                    dark_mode
+                },
+                create: {
+                    user_id: userId,
+                    language,
+                    timezone,
+                    location,
+                    dark_mode
+                }
         });
 
         sendOk(res, 'succesfully updated settings', updated);
