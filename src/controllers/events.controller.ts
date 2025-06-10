@@ -7,21 +7,21 @@ const prisma = new PrismaClient();
 
 export const createEvent = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { title, description, eventDate, startTime, endTime } = req.body;
-    if (!title || !eventDate) {
-      sendBadRequest(res, 'title and event date are required');
+    const { title, description, startTime, endTime } = req.body;
+
+    if (!title || !startTime || !endTime) {
+      sendBadRequest(res, 'title and event dates are required');
       return;
     }
    
     // check to avoid past dates
-    if(!isFutureDate(eventDate)){
-        sendBadRequest(res, 'event date must be a valid date starting from tomorrow')
+    if(!isFutureDate(startTime) || !isFutureDate(endTime)){
+        sendBadRequest(res, 'event dates must be a valid date starting from today')
         return;
     }
     
     const start = new Date(startTime);
     const end = new Date(endTime);
-
     // time format validations
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       sendBadRequest(res, 'invalid date format');
@@ -80,19 +80,25 @@ export const editEvent = async (req: AuthenticatedRequest, res: Response) => {
         const eventId = Number(eventIdStr);
         const { title, description, startTime, endTime } = req.body;
         // asumming we are handling UTC dates
-        const start = new Date(startTime);
-        const end = new Date(endTime);
-
+        
         if (isNaN(eventId)) {
             sendBadRequest(res, 'invalid event id');
             return;
         }
-
+        
         if (!title || !startTime || !endTime) {
             sendBadRequest(res, 'title and event date are required');
             return;
         }
 
+        // check to avoid past dates
+        if(!isFutureDate(startTime) || !isFutureDate(endTime)){
+            sendBadRequest(res, 'event dates must be a valid date starting from today')
+            return;
+        }
+        
+        const start = new Date(startTime);
+        const end = new Date(endTime);
         if (isNaN(start.getTime()) || isNaN(end.getTime())) {
             sendBadRequest(res, 'invalid date format');
             return;

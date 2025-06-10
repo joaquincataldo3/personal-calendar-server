@@ -4,9 +4,9 @@ export const isFutureDate = (dateStr: string): boolean => {
 
   if (isNaN(date.getTime())) return false;
 
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
 
-  return date >= tomorrow;
+  return date >= today;
 };
+
