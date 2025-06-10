@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const getUserSettings = async (req: AuthenticatedRequest, res: Response) => {
   try { 
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const settings = await prisma.userSettings.findUnique({ where: { user_id: userId } });
     sendOk(res, 'successfully retrieved settings', settings)
   } catch (error) {
@@ -19,7 +19,7 @@ export const getUserSettings = async (req: AuthenticatedRequest, res: Response) 
 
 export const updateUserSettings = async (req: AuthenticatedRequest, res: Response) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         const { language, timezone, location, dark_mode } = req.body;
 
         const updated = await prisma.userSettings.update({
