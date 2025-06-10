@@ -1,7 +1,8 @@
 import { PrismaClient } from "../generated/prisma";
 import { AuthenticatedRequest } from "../middlewares/authenticateToken";
 import { sendOk, sendServerError } from "../utils/sendResponses";
-import { Response } from "express";
+import { Response, Request } from "express";
+import { languages, locations, timezones } from "../utils/utils";
 const prisma = new PrismaClient();
 
 export const getUserSettings = async (req: AuthenticatedRequest, res: Response) => {
@@ -15,3 +16,35 @@ export const getUserSettings = async (req: AuthenticatedRequest, res: Response) 
     sendServerError(res);
   }
 };
+
+export const updateUserSettings = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userId = req.user.id;
+        const { language, timezone, location, dark_mode } = req.body;
+
+        const updated = await prisma.userSettings.update({
+            where: { user_id: userId },
+            data: { 
+                language, 
+                timezone, 
+                location, 
+                dark_mode
+            }
+        });
+
+        sendOk(res, 'succesfully updated settings', updated);
+    } catch (error) {
+        console.log('error');
+        console.log(error);
+        sendServerError(res);
+    }
+};
+
+export const getSettingsConstants = (req: Request, res: Response) => {
+    const settings = [
+        languages,
+        timezones,
+        locations
+    ]
+    sendOk(res, '', settings);
+}
