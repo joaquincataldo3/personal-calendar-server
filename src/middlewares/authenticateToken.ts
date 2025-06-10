@@ -12,7 +12,6 @@ export const authenticateToken = (
 ) => {
  
   const {token} = req.cookies;
-
   if (!token) {
     res.status(401).json({
       statusCode: 401,

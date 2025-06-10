@@ -33,12 +33,13 @@ model Event {
 }
 
 model UserSettings {
-  user_id     Int     @id
-  language    String? @default("es") @db.VarChar(10)
-  timezone    String? @default("UTC") @db.VarChar(50)
-  location    String? @db.VarChar(100)
-  hour_format String? @db.VarChar(10)
-  users       User    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_id     Int      @id
+  language    String?  @db.VarChar(10)
+  timezone    String?  @db.VarChar(50)
+  location    String?  @db.VarChar(100)
+  hour_format String?  @db.VarChar(10)
+  dark_mode   Boolean?
+  users       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("user_settings")
 }
