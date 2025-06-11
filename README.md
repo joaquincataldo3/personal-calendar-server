@@ -1,5 +1,5 @@
 # calendar app server – assessment
-backend is built with Node.js, Express, TypeScript, Prisma ORM and PostgreSQL.
+built with node.js, express, typeScript, prisma orm and postgresql.
 
 ## getting started
 
