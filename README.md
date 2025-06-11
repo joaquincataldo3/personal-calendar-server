@@ -32,6 +32,7 @@ ORIGIN
 * by default, if not configurated, localhost is DB_HOST value
 * by default, if not configurated, DB_PORT is 5432
 * DB_NAME is up to you (i recommend personal_calendar)
+* JWT_SECRET is up to you
 * variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/DATABASE"
 * origin variable must be localhost with port number of the frontend (ex: http://localhost:4200)
 
