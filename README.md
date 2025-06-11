@@ -30,7 +30,8 @@ JWT_SECRET,
 ORIGIN
 * by default, if not configurated, postgres is DB_USER value
 * by default, if not configurated, localhost is DB_HOST value
-* by default, if not configurated, DB_PORT is 5432 
+* by default, if not configurated, DB_PORT is 5432
+* DB_NAME is up to you (i recommend personal_calendar)
 * variable database_url must have this format "postgresql://-USER-:-PASSWORD-@localhost:PORT/DATABASE"
 * origin variable must be localhost with port number of the frontend (ex: http://localhost:4200)
 
